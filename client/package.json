@@ -1,0 +1,26 @@
+{
+  "name": "intouch-band",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "1.0.10"
+  },
+  "dependencies": {
+    "axios": "^0.16.2",
+    "moment": "^2.18.1",
+    "onsenui": "^2.4.2",
+    "ramda": "^0.24.1",
+    "react": "^15.6.1",
+    "react-addons-shallow-compare": "^15.6.0",
+    "react-dates": "^12.2.4",
+    "react-dom": "^15.6.1",
+    "react-onsenui": "^1.4.0",
+    "shortid": "^2.2.8"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
