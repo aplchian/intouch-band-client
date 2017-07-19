@@ -1,15 +1,21 @@
 import React from 'react'
-import {
-  List,
-  ListItem,
-  ListHeader,
-} from 'react-onsenui'
-
+import { List, ListItem, ListHeader } from 'react-onsenui'
 import { DateRangePicker } from 'react-dates'
 import ViewPage from './View'
 import shortId from 'shortid'
+import { connect } from 'react-redux'
+import { curry, filter } from 'ramda'
+import { setFilteredEvents, setEventFilterDates } from '../../actions/events'
+import moment from 'moment'
 
-export default props => {
+const EventList = props => {
+  const handleDateChange = curry((allEvents, { startDate, endDate }) => {
+    props.dispatch(setEventFilterDates({ startDate, endDate }))
+  })
+
+  const handleFocusChange = focusedInput => {
+    props.dispatch(setEventFilterDates({ focusedInput }))
+  }
 
   const renderRow = item => {
     const obj = {
@@ -19,7 +25,10 @@ export default props => {
     }
 
     return (
-      <ListItem key={shortId()} onClick={props.pushPage.bind(this, props.navigator, obj)}>
+      <ListItem
+        key={shortId()}
+        onClick={props.pushPage.bind(this, props.navigator, obj)}
+      >
         <div className="w-100 db relative">
           <span className="left db">
             {item.name}
@@ -40,21 +49,33 @@ export default props => {
     )
   }
 
+  const { events } = props
+
+  console.log('props', props)
+
   return (
     <div style={{ backgroundColor: 'white' }}>
       <DateRangePicker
-        startDate={props.state.startDate} // momentPropTypes.momentObj or null,
-        endDate={props.state.endDate} // momentPropTypes.momentObj or null,
-        onDatesChange={props.handleDateChange} // PropTypes.func.isRequired,
-        focusedInput={props.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-        onFocusChange={props.handleFocusChange} // PropTypes.func.isRequired,
+        startDate={props.events.startDate} // momentPropTypes.momentObj or null,
+        endDate={props.events.endDate} // momentPropTypes.momentObj or null,
+        onDatesChange={handleDateChange(props.events.all)} // PropTypes.func.isRequired,
+        focusedInput={props.events.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+        onFocusChange={handleFocusChange}
         orientation="vertical"
       />
       <List
-        dataSource={props.state.events}
+        dataSource={props.events.filtered}
         renderRow={renderRow}
         renderHeader={renderEventsHeader}
       />
     </div>
   )
+}
+
+const connector = connect(mapStateToProps)
+
+export default connector(EventList)
+
+function mapStateToProps(state) {
+  return state
 }
