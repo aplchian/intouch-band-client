@@ -3,7 +3,7 @@ import {
   SET_ALL_EVENTS,
   SET_FILTER_DATES_EVENTS
 } from '../constants'
-import { append, reject, merge, filter, assoc } from 'ramda'
+import { merge } from 'ramda'
 import moment from 'moment'
 import filterEventsByDate from './helpers/filterEventsByDate'
 

@@ -4,8 +4,8 @@ import { DateRangePicker } from 'react-dates'
 import ViewPage from './View'
 import shortId from 'shortid'
 import { connect } from 'react-redux'
-import { curry, filter } from 'ramda'
-import { setFilteredEvents, setEventFilterDates } from '../../actions/events'
+import { curry } from 'ramda'
+import { setEventFilterDates } from '../../actions/events'
 import moment from 'moment'
 
 const EventList = props => {
@@ -49,22 +49,28 @@ const EventList = props => {
     )
   }
 
-  const { events } = props
-
-  console.log('props', props)
+  const {
+    events: {
+      startDate = moment(),
+      endDate = moment().add(3, 'months'),
+      all,
+      focusedInput,
+      filtered
+    }
+  } = props
 
   return (
     <div style={{ backgroundColor: 'white' }}>
       <DateRangePicker
-        startDate={props.events.startDate} // momentPropTypes.momentObj or null,
-        endDate={props.events.endDate} // momentPropTypes.momentObj or null,
-        onDatesChange={handleDateChange(props.events.all)} // PropTypes.func.isRequired,
-        focusedInput={props.events.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+        startDate={startDate} // momentPropTypes.momentObj or null,
+        endDate={endDate} // momentPropTypes.momentObj or null,
+        onDatesChange={handleDateChange(all)} // PropTypes.func.isRequired,
+        focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
         onFocusChange={handleFocusChange}
         orientation="vertical"
       />
       <List
-        dataSource={props.events.filtered}
+        dataSource={filtered}
         renderRow={renderRow}
         renderHeader={renderEventsHeader}
       />

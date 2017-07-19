@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { path, filter } from 'ramda'
 import 'react-dates/lib/css/_datepicker.css'
 import './App.css'
 import './styles.css'
@@ -17,16 +16,6 @@ const {
   BackButton,
   Tabbar
 } = require('react-onsenui')
-
-const { getAllEvents } = require('./services/events')
-
-const MyTab = props => {
-  return (
-    <Page>
-      {props.content}
-    </Page>
-  )
-}
 
 class App extends Component {
   constructor(props) {
