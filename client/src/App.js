@@ -67,6 +67,7 @@ class App extends Component {
     const events = await getAllEvents(
       "band_Stop_Light_Observations"
     ).catch(err => console.log("err!", err));
+    console.log('events', events)
     const allEvents = getDocs(events);
     const filteredEvents = this.filterEventsByDate(this.state.startDate, this.state.endDate, allEvents)
     this.setState({
