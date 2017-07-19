@@ -17,13 +17,15 @@ export default function filterEventsByDate(
   events,
   eventsObj
 ) {
-  const filterEvents = event =>
-    moment(event.date).isBetween(
-      moment(startDate).startOf('day').format('L'),
-      moment(endDate).endOf('day').format('L'),
+  const filterEvents = event => {
+    const res = moment(event.date).isBetween(
+      moment(startDate).startOf('day').format(),
+      moment(endDate).endOf('day').format(),
       null,
       '[]'
     )
+    return res
+  }
 
   const filteredEvents = filter(filterEvents, events)
   return assoc('filtered', filteredEvents, eventsObj)
