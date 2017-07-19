@@ -2,7 +2,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import events from './reducers/events'
 import { getAllEvents } from './services/events'
-import { setAllEvents } from './actions/events'
+import { setAllEvents, startFetchingEvents } from './actions/events'
 
 const store = createStore(
   combineReducers({
@@ -12,6 +12,7 @@ const store = createStore(
 )
 
 function getEvents(dispatch, getState) {
+  dispatch(startFetchingEvents())
   getAllEvents(
     'band_Stop_Light_Observations'
   ).then(({ data: { docs: allEvents } }) => {

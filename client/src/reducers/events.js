@@ -1,7 +1,8 @@
 import {
   SET_FILTERED_EVENTS,
   SET_ALL_EVENTS,
-  SET_FILTER_DATES_EVENTS
+  SET_FILTER_DATES_EVENTS,
+  START_FETCHING_EVENTS
 } from '../constants'
 import { merge } from 'ramda'
 import moment from 'moment'
@@ -40,6 +41,8 @@ export default (
           )
         : action.payload
       return merge(state, updatedPayload)
+    case START_FETCHING_EVENTS:
+      return merge(state, action.payload)
     default:
       return state
   }
