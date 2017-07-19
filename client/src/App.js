@@ -5,6 +5,7 @@ import './App.css'
 import './styles.css'
 import moment from 'moment'
 import EventsListPage from './components/Events/List'
+import DaySheetView from './components/DaySheet/View'
 
 require('onsenui')
 
@@ -13,8 +14,10 @@ const {
   Toolbar,
   Tab,
   Navigator,
-  BackButton
+  BackButton,
+  Tabbar
 } = require('react-onsenui')
+
 const { getAllEvents } = require('./services/events')
 
 const MyTab = props => {
@@ -33,33 +36,13 @@ class App extends Component {
     this.renderToolbar = this.renderToolbar.bind(this)
     this.pushPage = this.pushPage.bind(this)
     this.handleClick = this.handleClick.bind(this)
-    this.handleDateChange = this.handleDateChange.bind(this)
-    this.filterEventsByDate = this.filterEventsByDate.bind(this)
     this.handleFocusChange = this.handleFocusChange.bind(this)
     this.state = {
       events: [{ name: '' }],
       startDate: moment(),
-      endDate: moment().add(3, 'months')
+      endDate: moment().add(3, 'months'),
+      index: 0
     }
-  }
-
-  async componentDidMount() {
-    const getDocs = path(['data', 'docs'])
-
-    const events = await getAllEvents(
-      'band_Stop_Light_Observations'
-    ).catch(err => console.log('err!', err))
-
-    const allEvents = getDocs(events)
-    const filteredEvents = this.filterEventsByDate(
-      this.state.startDate,
-      this.state.endDate,
-      allEvents
-    )
-    this.setState({
-      events: filteredEvents,
-      allEvents
-    })
   }
 
   pushPage(navigator, obj) {
@@ -77,12 +60,58 @@ class App extends Component {
   renderTabs() {
     return [
       {
-        content: <MyTab content="Welcome home" />,
-        tab: <Tab label="Home" icon="md-home" />
+        content: (
+          <Page>
+            <Navigator
+              renderPage={this.renderPage}
+              initialRoute={{
+                title: 'inTouch',
+                hasBackButton: false,
+                Component: DaySheetView
+              }}
+            />
+          </Page>
+        ),
+        tab: (
+          <Tab>
+            <div>
+              <i className="material-icons">schedule</i>
+              <span
+                className="db f6"
+                style={{ position: 'relative', bottom: 38, fontSize: 11 }}
+              >
+                today
+              </span>
+            </div>
+          </Tab>
+        )
       },
       {
-        content: <MyTab content="Change the settings" />,
-        tab: <Tab label="Settings" icon="md-settings" />
+        content: (
+          <Page>
+            <Navigator
+              renderPage={this.renderPage}
+              initialRoute={{
+                title: 'inTouch',
+                hasBackButton: false,
+                Component: EventsListPage
+              }}
+            />
+          </Page>
+        ),
+        tab: (
+          <Tab>
+            <div>
+              <i className="material-icons">event_note</i>
+              <span
+                className="db f6"
+                style={{ position: 'relative', bottom: 38, fontSize: 11 }}
+              >
+                events
+              </span>
+            </div>
+          </Tab>
+        )
       }
     ]
   }
@@ -132,46 +161,23 @@ class App extends Component {
     )
   }
 
-  filterEventsByDate(startDate, endDate, events) {
-    const filterEvents = event => {
-      return moment(event.date).isBetween(
-        moment(startDate).format('L'),
-        moment(endDate).format('L'),
-        null,
-        '[]'
-      )
-    }
-    const filteredEvents = filter(filterEvents, events)
-    return filteredEvents
-  }
-
-  handleDateChange({ startDate, endDate }) {
-    const filteredEvents = this.filterEventsByDate(
-      startDate,
-      endDate,
-      this.state.allEvents
-    )
-    this.setState({
-      startDate,
-      endDate,
-      events: filteredEvents
-    })
-  }
-
-  handleFocusChange(focusedInput){
+  handleFocusChange(focusedInput) {
     this.setState({ focusedInput })
   }
 
   render() {
     return (
-      <Navigator
-        renderPage={this.renderPage}
-        initialRoute={{
-          title: 'Events',
-          hasBackButton: false,
-          Component: EventsListPage
-        }}
-      />
+      <div>
+        <Page>
+          <Tabbar
+            position="auto"
+            index={this.state.index}
+            renderTabs={this.renderTabs}
+            onPreChange={() => this.forceUpdate()}
+            animation="slide"
+          />
+        </Page>
+      </div>
     )
   }
 }
