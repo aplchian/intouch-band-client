@@ -2,7 +2,9 @@ import {
   SET_FILTERED_EVENTS,
   SET_ALL_EVENTS,
   SET_FILTER_DATES_EVENTS,
-  START_FETCHING_EVENTS
+  START_FETCHING_EVENTS,
+  RECEIVE_EVENT,
+  TOGGLE_EVENT_SHOW
 } from '../constants'
 import { merge } from 'ramda'
 import moment from 'moment'
@@ -16,7 +18,9 @@ export default (
     all: [],
     filtered: [],
     startDate: moment(),
-    endDate: moment().add(3, 'months')
+    endDate: moment().add(3, 'months'),
+    event: null,
+    renderEventShowPage: false
   },
   action
 ) => {
@@ -42,6 +46,10 @@ export default (
         : action.payload
       return merge(state, updatedPayload)
     case START_FETCHING_EVENTS:
+      return merge(state, action.payload)
+    case RECEIVE_EVENT:
+      return merge(state, action.payload)
+    case TOGGLE_EVENT_SHOW:
       return merge(state, action.payload)
     default:
       return state

@@ -56,7 +56,7 @@ class EventShow extends Component {
               <CloseIcon />
             </IconButton>
             <Typography type="title" color="inherit" className={classes.flex}>
-              {event.venue}
+              {event.name}
             </Typography>
           </Toolbar>
         </AppBar>

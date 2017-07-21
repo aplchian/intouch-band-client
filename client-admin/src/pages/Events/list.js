@@ -15,6 +15,7 @@ import Slide from "material-ui/transitions/Slide"
 import AddEvent from "./add"
 import { connect } from "react-redux"
 import { map, addIndex, curry, length, inc } from "ramda"
+import { receiveEvent, toggleEventRenderShowPage } from "../../actions/events"
 import EventsShow from "./show"
 const mapIndex = addIndex(map)
 
@@ -53,12 +54,15 @@ class EventsList extends Component {
   }
 
   handleShowClose = () => {
-    this.setState({ showOpen: false })
+    this.props.dispatch(toggleEventRenderShowPage(false))
   }
 
   handleEventClick = event => {
     return e => {
-      this.setState({ event, showOpen: true })
+      this.setState({ showOpen: true }, () => {
+        this.props.dispatch(receiveEvent(event))
+        this.props.dispatch(toggleEventRenderShowPage(true))
+      })
     }
   }
 
@@ -69,14 +73,16 @@ class EventsList extends Component {
       events: { filtered: filteredEvents }
     } = this.props
 
+    console.log('props', this.props)
+
     const cardClasss = `mt2 mb2 w-90 center ${card}`
 
     const renderEvents = curry((len, event, i) => {
-      const { venue, city, state } = event
+      const { name, city, state } = event
       return (
         <div>
           <ListItem onClick={this.handleEventClick(event)} button>
-            <ListItemText primary={venue} secondary={`${city}, ${state}`} />
+            <ListItemText primary={name} secondary={`${city}, ${state}`} />
           </ListItem>
           {len === inc(i) ? null : <Divider />}
         </div>
@@ -97,16 +103,17 @@ class EventsList extends Component {
         >
           <AddIcon />
         </Button>
-        {this.state.event
+        {this.props.events.renderEventShowPage
           ? <EventsShow
-              open={this.state.showOpen}
+              open={this.props.events.renderEventShowPage}
               handleClose={this.handleShowClose}
-              event={this.state.event}
+              event={this.props.events.event}
             />
           : null}
         <AddEvent
           open={this.state.open}
           handleClose={this.handleRequestClose}
+          dispatch={this.props.dispatch}
         />
       </div>
     )

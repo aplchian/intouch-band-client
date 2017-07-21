@@ -1,13 +1,19 @@
-const axios = require('axios')
+const axios = require("axios")
 
-module.exports = {
-  getAllEvents
+var api = axios.create({
+  baseURL: "http://localhost:3090",
+  timeout: 3090
+})
+
+export function getAllEvents(band) {
+  return api.get(`/events/${band}`)
 }
 
-// https://intouch-band-api-qewpgmvgep.now.sh/events/${band}
-// const 
-
-function getAllEvents(band){
-  return axios(`http://localhost:3090/events/${band}`)
+export function createEvent(event) {
+  return api.post(`/events`, {
+    event: {
+      band: "band_Stop_Light_Observations",
+      ...event
+    }
+  })
 }
-

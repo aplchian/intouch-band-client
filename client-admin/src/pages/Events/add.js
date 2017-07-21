@@ -19,6 +19,7 @@ import TextField from "material-ui/TextField"
 import Grid from "material-ui/Grid"
 import { blueGrey } from "material-ui/colors"
 import { Field, reduxForm, Form } from "redux-form"
+import { createEvent } from "../../actions/events"
 
 const styleSheet = createStyleSheet("TextFields", theme => ({
   textField: {
@@ -42,12 +43,13 @@ const Input = props => {
   )
 }
 
-const onAddEvent = formData => {
-  console.log("formData", formData)
-}
-
 const AddEvent = props => {
   const { classes, handleClose, open } = props
+  const onAddEvent = formData => {
+    props.dispatch(createEvent(formData)).then(res => {
+      handleClose()
+    })
+  }
   return (
     <Dialog
       open={open}

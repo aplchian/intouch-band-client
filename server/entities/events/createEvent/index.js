@@ -1,9 +1,8 @@
 const validateEvent = require("../../validate/event")
-const { replace, trim } = require("ramda")
+const { replace, trim, assoc } = require("ramda")
 const shortId = require("shortid")
-const PouchDB = require("pouchdb");
-const db = new PouchDB(process.env.DB_URL);
-
+const PouchDB = require("pouchdb")
+const db = new PouchDB(process.env.DB_URL)
 
 module.exports = async event => {
   const updatedEvent = buildEvent(event)
@@ -17,15 +16,25 @@ module.exports = async event => {
   }
 }
 
-function buildEvent({ name, band }) {
+function buildEvent(event) {
   const removeSpaces = str => replace(/ /, "_", trim(str))
-  const updated = {
-    _id: `event_${removeSpaces(band)}_${shortId()}`,
-    type: "event",
-    schedule: [],
-    contacts: [],
-    band: band,
-    name: name
+  if (!event.name || !event.band) {
+    return {
+      _id: "",
+      type: "event",
+      schedule: [],
+      contacts: [],
+      band: event.band,
+      name: event.name
+    }
+  } else {
+    return {
+      _id: `event_${removeSpaces(event.band)}_${shortId()}`,
+      type: "event",
+      schedule: [],
+      contacts: [],
+      band: event.band,
+      name: event.name
+    }
   }
-  return updated
 }

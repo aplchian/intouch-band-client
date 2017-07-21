@@ -2,8 +2,12 @@ import {
   SET_ALL_EVENTS,
   SET_FILTERED_EVENTS,
   SET_FILTER_DATES_EVENTS,
-  START_FETCHING_EVENTS
-} from '../constants'
+  START_FETCHING_EVENTS,
+  CREATE_EVENT,
+  RECEIVE_EVENT,
+  TOGGLE_EVENT_SHOW
+} from "../constants"
+import { createEvent as createEventService, getAllEvents } from "../services/events"
 
 export function setAllEvents(all) {
   return {
@@ -30,5 +34,35 @@ export function startFetchingEvents() {
   return {
     type: START_FETCHING_EVENTS,
     payload: { isFetching: true }
+  }
+}
+
+export function receiveEvent(event) {
+  return {
+    type: RECEIVE_EVENT,
+    payload: { event }
+  }
+}
+
+export function toggleEventRenderShowPage(state) {
+  return {
+    type: TOGGLE_EVENT_SHOW,
+    payload: { renderEventShowPage: state }
+  }
+}
+
+export function createEvent(event) {
+  return dispatch => {
+    return createEventService(event).then(res => {
+      dispatch(receiveEvent(res.data))
+      dispatch(toggleEventRenderShowPage(true))
+      dispatch(startFetchingEvents())
+      getAllEvents(
+        "band_Stop_Light_Observations"
+      ).then(({ data: { docs: allEvents } }) => {
+        dispatch(setAllEvents(allEvents))
+      })
+      return res.data
+    })
   }
 }

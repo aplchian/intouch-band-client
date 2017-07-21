@@ -44,7 +44,7 @@ var schema = {
     },
     name: {
       type: "string",
-      require: true
+      required: true
     },
     venue: {
       type: "object",
