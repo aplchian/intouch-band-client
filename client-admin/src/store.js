@@ -3,10 +3,12 @@ import thunk from 'redux-thunk'
 import events from './reducers/events'
 import { getAllEvents } from './services/events'
 import { setAllEvents, startFetchingEvents } from './actions/events'
+import { reducer as formReducer } from 'redux-form'
 
 const store = createStore(
   combineReducers({
-    events
+    events,
+    form: formReducer
   }),
   applyMiddleware(thunk)
 )

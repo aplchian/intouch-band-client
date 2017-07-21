@@ -12,6 +12,7 @@ import IconButton from "material-ui/IconButton"
 import Typography from "material-ui/Typography"
 import CloseIcon from "material-ui-icons/Close"
 import Slide from "material-ui/transitions/Slide"
+import AddEvent from "./add"
 import { connect } from "react-redux"
 import { map, addIndex, curry, length, inc } from "ramda"
 import EventsShow from "./show"
@@ -20,7 +21,7 @@ const mapIndex = addIndex(map)
 const styleSheet = createStyleSheet("FullScreenDialog", {
   appBar: {
     position: "relative",
-    boxShadow: 'none'
+    boxShadow: "none"
   },
   flex: {
     flex: 1
@@ -103,31 +104,10 @@ class EventsList extends Component {
               event={this.state.event}
             />
           : null}
-        <Dialog
-          fullScreen
+        <AddEvent
           open={this.state.open}
-          onRequestClose={this.handleRequestClose}
-          transition={<Slide direction="up" />}
-        >
-          <AppBar className={classes.appBar}>
-            <Toolbar>
-              <IconButton
-                color="contrast"
-                onClick={this.handleRequestClose}
-                aria-label="Close"
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography type="title" color="inherit" className={classes.flex}>
-                Add Event
-              </Typography>
-            </Toolbar>
-          </AppBar>
-          <div
-            className="h-100 w-100 absolute top-0 lef-100"
-            style={{ backgroundColor: "#3f51b5" }}
-          />
-        </Dialog>
+          handleClose={this.handleRequestClose}
+        />
       </div>
     )
   }

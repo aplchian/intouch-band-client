@@ -3,13 +3,24 @@ import ReactDOM from "react-dom"
 import "./index.css"
 import App from "./App"
 import registerServiceWorker from "./registerServiceWorker"
-import { MuiThemeProvider } from "material-ui/styles"
+import { MuiThemeProvider, createMuiTheme } from "material-ui/styles"
 import { Provider } from "react-redux"
 import store from "./store"
+import createPalette from 'material-ui/styles/palette';
+import { blueGrey, red, grey } from 'material-ui/colors';
+
+
+
+const theme = createMuiTheme({
+  palette: createPalette({
+    primary: blueGrey, // Purple and green play nicely together.
+    error: red,
+  })
+})
 
 ReactDOM.render(
   <Provider store={store}>
-    <MuiThemeProvider>
+    <MuiThemeProvider theme={theme}>
       <App />
     </MuiThemeProvider>
   </Provider>,
