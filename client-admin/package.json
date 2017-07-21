@@ -6,12 +6,15 @@
     "react-scripts": "1.0.10"
   },
   "dependencies": {
+    "axios": "^0.16.2",
     "material-ui": "^1.0.0-alpha.22",
+    "material-ui-icons": "^1.0.0-alpha.19",
     "ramda": "^0.24.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.5",
     "redux": "^3.7.2",
+    "redux-form": "^7.0.1",
     "typeface-roboto": "0.0.31"
   },
   "scripts": {
