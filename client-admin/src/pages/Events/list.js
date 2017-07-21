@@ -12,10 +12,15 @@ import IconButton from "material-ui/IconButton"
 import Typography from "material-ui/Typography"
 import CloseIcon from "material-ui-icons/Close"
 import Slide from "material-ui/transitions/Slide"
+import { connect } from "react-redux"
+import { map, addIndex, curry, length, inc } from "ramda"
+import EventsShow from "./show"
+const mapIndex = addIndex(map)
 
 const styleSheet = createStyleSheet("FullScreenDialog", {
   appBar: {
-    position: "relative"
+    position: "relative",
+    boxShadow: 'none'
   },
   flex: {
     flex: 1
@@ -29,7 +34,8 @@ class EventsList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: false
+      open: false,
+      showOpen: false
     }
   }
 
@@ -41,21 +47,45 @@ class EventsList extends Component {
     this.setState({ open: true })
   }
 
+  handleShowOpen = () => {
+    this.setState({ showOpen: true })
+  }
+
+  handleShowClose = () => {
+    this.setState({ showOpen: false })
+  }
+
+  handleEventClick = event => {
+    return e => {
+      this.setState({ event, showOpen: true })
+    }
+  }
+
   render() {
-    const { classes: { card }, classes } = this.props
+    const {
+      classes: { card },
+      classes,
+      events: { filtered: filteredEvents }
+    } = this.props
 
     const cardClasss = `mt2 mb2 w-90 center ${card}`
+
+    const renderEvents = curry((len, event, i) => {
+      const { venue, city, state } = event
+      return (
+        <div>
+          <ListItem onClick={this.handleEventClick(event)} button>
+            <ListItemText primary={venue} secondary={`${city}, ${state}`} />
+          </ListItem>
+          {len === inc(i) ? null : <Divider />}
+        </div>
+      )
+    })
 
     return (
       <div>
         <List>
-          <ListItem button>
-            <ListItemText primary="Music Farm" secondary="Charleston, SC" />
-          </ListItem>
-          <Divider />
-          <ListItem button>
-            <ListItemText primary="The Tabernacle" secondary="Atlanta, GA" />
-          </ListItem>
+          {mapIndex(renderEvents(length(filteredEvents)), filteredEvents)}
         </List>
         <Button
           fab
@@ -66,6 +96,13 @@ class EventsList extends Component {
         >
           <AddIcon />
         </Button>
+        {this.state.event
+          ? <EventsShow
+              open={this.state.showOpen}
+              handleClose={this.handleShowClose}
+              event={this.state.event}
+            />
+          : null}
         <Dialog
           fullScreen
           open={this.state.open}
@@ -84,15 +121,22 @@ class EventsList extends Component {
               <Typography type="title" color="inherit" className={classes.flex}>
                 Add Event
               </Typography>
-              <Button color="contrast" onClick={this.handleRequestClose}>
-                save
-              </Button>
             </Toolbar>
           </AppBar>
+          <div
+            className="h-100 w-100 absolute top-0 lef-100"
+            style={{ backgroundColor: "#3f51b5" }}
+          />
         </Dialog>
       </div>
     )
   }
 }
 
-export default withStyles(styleSheet)(EventsList)
+const connector = connect(mapStateToProps)
+
+export default connector(withStyles(styleSheet)(EventsList))
+
+function mapStateToProps(state) {
+  return state
+}
