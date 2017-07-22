@@ -2,7 +2,7 @@ const axios = require("axios")
 
 var api = axios.create({
   baseURL: "http://localhost:3090",
-  timeout: 3090
+  timeout: 10000
 })
 
 export function getAllEvents(band) {

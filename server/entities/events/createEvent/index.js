@@ -25,7 +25,8 @@ function buildEvent(event) {
       schedule: [],
       contacts: [],
       band: event.band,
-      name: event.name
+      name: event.name,
+      confirmed: false
     }
   } else {
     return {
@@ -34,7 +35,8 @@ function buildEvent(event) {
       schedule: [],
       contacts: [],
       band: event.band,
-      name: event.name
+      name: event.name,
+      confirmed: false
     }
   }
 }

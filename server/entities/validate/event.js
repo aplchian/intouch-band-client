@@ -60,6 +60,10 @@ var schema = {
     },
     notes: {
       type: "string"
+    },
+    confirmed: {
+      type: "boolean",
+      required: true
     }
   }
 }
