@@ -29,6 +29,7 @@ import SaveIcon from "material-ui-icons/Save"
 import { merge } from "ramda"
 import { updateEvent } from "../../actions/events"
 import Snackbar from "material-ui/Snackbar"
+import Schedule from './schedule'
 
 const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   root: {
@@ -278,7 +279,7 @@ class EventShow extends Component {
                   </Grid>
                 </Grid>
               </div>}
-            {this.state.index === 1 && <h1>Schedule</h1>}
+            {this.state.index === 1 && <Schedule />}
             {this.state.index === 2 && <h1>Contacts</h1>}
             {this.state.index === 3 && <h1>File</h1>}
           </div>

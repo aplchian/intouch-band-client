@@ -17,6 +17,7 @@ import { connect } from "react-redux"
 import { map, addIndex, curry, length, inc } from "ramda"
 import { receiveEvent, toggleEventRenderShowPage } from "../../actions/events"
 import EventsShow from "./show"
+import FAB from '../../components/FAB'
 const mapIndex = addIndex(map)
 
 const styleSheet = createStyleSheet("FullScreenDialog", {
@@ -73,8 +74,6 @@ class EventsList extends Component {
       events: { filtered: filteredEvents }
     } = this.props
 
-    console.log('props', this.props)
-
     const cardClasss = `mt2 mb2 w-90 center ${card}`
 
     const renderEvents = curry((len, event, i) => {
@@ -94,15 +93,7 @@ class EventsList extends Component {
         <List>
           {mapIndex(renderEvents(length(filteredEvents)), filteredEvents)}
         </List>
-        <Button
-          fab
-          color="primary"
-          style={{ position: "fixed" }}
-          className="bottom-1 right-1"
-          onClick={this.handleOpen}
-        >
-          <AddIcon />
-        </Button>
+        <FAB onClick={this.handleOpen} />
         {this.props.events.renderEventShowPage
           ? <EventsShow
               open={this.props.events.renderEventShowPage}

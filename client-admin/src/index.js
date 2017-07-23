@@ -8,6 +8,8 @@ import { Provider } from "react-redux"
 import store from "./store"
 import createPalette from 'material-ui/styles/palette';
 import { blueGrey, red, grey } from 'material-ui/colors';
+import 'react-dates/lib/css/_datepicker.css';
+
 
 
 
