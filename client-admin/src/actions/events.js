@@ -7,7 +7,7 @@ import {
   RECEIVE_EVENT,
   TOGGLE_EVENT_SHOW
 } from "../constants"
-import { createEvent as createEventService, getAllEvents } from "../services/events"
+import { createEvent as createEventService, getAllEvents, updateEvent as updateEventService } from "../services/events"
 
 export function setAllEvents(all) {
   return {
@@ -56,6 +56,21 @@ export function createEvent(event) {
     return createEventService(event).then(res => {
       dispatch(receiveEvent(res.data))
       dispatch(toggleEventRenderShowPage(true))
+      dispatch(startFetchingEvents())
+      getAllEvents(
+        "band_Stop_Light_Observations"
+      ).then(({ data: { docs: allEvents } }) => {
+        dispatch(setAllEvents(allEvents))
+      })
+      return res.data
+    })
+  }
+}
+
+export function updateEvent(event) {
+  return dispatch => {
+    return updateEventService(event).then(res => {
+      dispatch(receiveEvent(res.data))
       dispatch(startFetchingEvents())
       getAllEvents(
         "band_Stop_Light_Observations"

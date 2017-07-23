@@ -25,6 +25,10 @@ import Grid from "material-ui/Grid"
 import Menu, { MenuItem } from "material-ui/Menu"
 import { FormControlLabel } from "material-ui/Form"
 import Switch from "material-ui/Switch"
+import SaveIcon from "material-ui-icons/Save"
+import { merge } from "ramda"
+import { updateEvent } from "../../actions/events"
+import Snackbar from "material-ui/Snackbar"
 
 const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   root: {
@@ -83,25 +87,57 @@ class EventShow extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      index: 0
+      index: 0,
+      formData: { confirmed: false },
+      showSnackBar: false
     }
   }
 
-  componentDidMount(){
-    console.log('munt props', this.props)
+  componentDidMount() {
     const { event } = this.props
+    const formData = { confirmed: event.confirmed }
     this.setState({
-      confirmed: event.confirmed
+      formData
     })
   }
 
   handleChange = (event, index) => {
     this.setState({ index })
   }
+  handleConfirmedChange = (event, confirmed) => {
+    const dirty = confirmed !== !!this.props.event.confirmed
+    this.setState({ formData: { confirmed }, dirty })
+  }
+
+  handleEditSubmit = formData => {
+    const { formData: stateData } = this.state
+    const updatedEvent = merge(formData, stateData)
+    this.props
+      .dispatch(updateEvent(updatedEvent))
+      .then(res => {
+        this.setState({
+          showSnackBar: true,
+          dirty: false,
+          snackBarText: "Event Saved!"
+        })
+      })
+      .catch(err => {
+        console.log("err", err)
+        this.setState({
+          showSnackBar: true,
+          snackBarText: `Event Save failed!`
+        })
+      })
+  }
+
+  handleCloseSnackBar = () => {
+    this.setState({
+      showSnackBar: false
+    })
+  }
+
   render() {
     const { classes, event } = this.props
-
-    console.log('state', this.state)
 
     return (
       <Dialog
@@ -136,105 +172,130 @@ class EventShow extends Component {
               <Tab label="Files" />
             </Tabs>
           </AppBar>
+
           <div className={classes.container}>
             {this.state.index === 0 &&
-              <Grid container gutter={24}>
-                <Grid item xs={12} sm={6}>
-                  <Paper className={classes.paper}>
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="name"
-                      placeholder="Event Name"
-                      classes={classes}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          checked={this.state.confirmed}
-                          onChange={(event, checked) =>
-                            this.setState({ confirmed: checked })}
-                        />
-                      }
-                      label={
-                        this.state.confirmed ? "Confirmed" : "Not Confirmed"
-                      }
-                    />
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="capacity"
-                      placeholder="Capacity"
-                      classes={classes}
-                    />
-                    <Field
-                      component={InputMat}
-                      type="textarea"
-                      name="deal"
-                      placeholder="Deal"
-                      classes={classes}
-                    />
-                    <Field
-                      component={InputMat}
-                      type="textarea"
-                      name="notes"
-                      placeholder="Notes"
-                      classes={classes}
-                    />
-                  </Paper>
+              <div>
+                <Button
+                  color="accent"
+                  className="fr"
+                  onClick={this.props.handleSubmit(this.handleEditSubmit)}
+                >
+                  <SaveIcon />
+                  Save
+                </Button>
+                <Grid container gutter={24}>
+                  <Grid item xs={12} sm={6}>
+                    <Paper className={classes.paper}>
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="name"
+                        placeholder="Event Name"
+                        classes={classes}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={this.state.formData.confirmed}
+                            onChange={this.handleConfirmedChange}
+                          />
+                        }
+                        label={
+                          this.state.formData.confirmed
+                            ? "Confirmed"
+                            : "Not Confirmed"
+                        }
+                      />
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="capacity"
+                        placeholder="Capacity"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="textarea"
+                        name="deal"
+                        placeholder="Deal"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="textarea"
+                        name="notes"
+                        placeholder="Notes"
+                        classes={classes}
+                      />
+                    </Paper>
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Paper className={classes.paper}>
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="venue"
+                        placeholder="Venue Name"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="addressone"
+                        placeholder="Address One"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="addresstwo"
+                        placeholder="Address Two"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="city"
+                        placeholder="City"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="state"
+                        placeholder="State"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="text"
+                        name="zip"
+                        placeholder="Zip"
+                        classes={classes}
+                      />
+                    </Paper>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Paper className={classes.paper}>
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="venue"
-                      placeholder="Venue Name"
-                      classes={classes}
-                    />
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="addressone"
-                      placeholder="Address One"
-                      classes={classes}
-                    />
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="addresstwo"
-                      placeholder="Address Two"
-                      classes={classes}
-                    />
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="city"
-                      placeholder="City"
-                      classes={classes}
-                    />
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="state"
-                      placeholder="State"
-                      classes={classes}
-                    />
-                    <Field
-                      component={InputMat}
-                      type="text"
-                      name="zip"
-                      placeholder="Zip"
-                      classes={classes}
-                    />
-                  </Paper>
-                </Grid>
-              </Grid>}
+              </div>}
             {this.state.index === 1 && <h1>Schedule</h1>}
             {this.state.index === 2 && <h1>Contacts</h1>}
             {this.state.index === 3 && <h1>File</h1>}
           </div>
         </form>
+        <Snackbar
+          open={this.state.showSnackBar}
+          onRequestClose={this.handleCloseSnackBar}
+          transition={<Slide direction="up" />}
+          SnackbarContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={
+            <span id="message-id">
+              {this.state.snackBarText}
+            </span>
+          }
+        />
       </Dialog>
     )
   }

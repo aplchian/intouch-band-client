@@ -17,3 +17,7 @@ export function createEvent(event) {
     }
   })
 }
+
+export function updateEvent(event) {
+  return api.put(`/events`, { event })
+}

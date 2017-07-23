@@ -46,18 +46,13 @@ var schema = {
       type: "string",
       required: true
     },
-    venue: {
-      type: "object",
-      properties: {
-        name: { type: "string" },
-        city: { type: "string" },
-        state: { type: "string" },
-        addressone: { type: "string" },
-        addresstwo: { type: "string" },
-        parking: { type: "string" },
-        zipcode: { type: "number" }
-      }
-    },
+    venue: { type: "string" },
+    city: { type: "string" },
+    state: { type: "string" },
+    addressone: { type: "string" },
+    addresstwo: { type: "string" },
+    parking: { type: "string" },
+    zipcode: { type: "number" },
     notes: {
       type: "string"
     },
