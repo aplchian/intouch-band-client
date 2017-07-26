@@ -9,7 +9,7 @@ import Dialog, {
 } from "material-ui/Dialog"
 import { withStyles, createStyleSheet } from "material-ui/styles"
 import TextField from "material-ui/TextField"
-import { Field, reduxForm, Form } from "redux-form"
+import { Field, reduxForm } from "redux-form"
 import Slide from "material-ui/transitions/Slide"
 
 const styleSheet = createStyleSheet("TextFields", theme => ({
@@ -21,7 +21,6 @@ const styleSheet = createStyleSheet("TextFields", theme => ({
 }))
 
 const Input = props => {
-  console.log('props', props)
   return (
     <div className="mb2">
       <TextField

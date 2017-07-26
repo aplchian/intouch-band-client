@@ -26,6 +26,7 @@ function buildEvent(event) {
       contacts: [],
       band: event.band,
       name: event.name,
+      date: event.date,
       confirmed: false
     }
   } else {
@@ -36,6 +37,7 @@ function buildEvent(event) {
       contacts: [],
       band: event.band,
       name: event.name,
+      date: event.date,
       confirmed: false
     }
   }

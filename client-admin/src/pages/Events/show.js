@@ -3,14 +3,10 @@ import React, { Component } from "react"
 import Paper from "material-ui/Paper"
 import { connect } from "react-redux"
 import { withStyles, createStyleSheet } from "material-ui/styles"
-import AddIcon from "material-ui-icons/Add"
 import Button from "material-ui/Button"
 import Dialog from "material-ui/Dialog"
-import List, { ListItem, ListItemText } from "material-ui/List"
-import Divider from "material-ui/Divider"
 import AppBar from "material-ui/AppBar"
 import Toolbar from "material-ui/Toolbar"
-import Fade from "material-ui/transitions/Fade"
 import IconButton from "material-ui/IconButton"
 import Typography from "material-ui/Typography"
 import CloseIcon from "material-ui-icons/Close"
@@ -20,16 +16,15 @@ import Tabs, { Tab } from "material-ui/Tabs"
 import Input from "material-ui/Input"
 import InputLabel from "material-ui/Input/InputLabel"
 import FormControl from "material-ui/Form/FormControl"
-import FormHelperText from "material-ui/Form/FormHelperText"
 import Grid from "material-ui/Grid"
-import Menu, { MenuItem } from "material-ui/Menu"
 import { FormControlLabel } from "material-ui/Form"
 import Switch from "material-ui/Switch"
 import SaveIcon from "material-ui-icons/Save"
-import { merge } from "ramda"
+import { merge, assoc, compose, __ } from "ramda"
 import { updateEvent } from "../../actions/events"
 import Snackbar from "material-ui/Snackbar"
-import Schedule from './schedule'
+import Schedule from "./schedule"
+import moment from "moment"
 
 const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   root: {
@@ -97,8 +92,10 @@ class EventShow extends Component {
   componentDidMount() {
     const { event } = this.props
     const formData = { confirmed: event.confirmed }
+    const date = moment(event.date).format("YYYY-MM-DD")
     this.setState({
-      formData
+      formData,
+      date
     })
   }
 
@@ -111,19 +108,25 @@ class EventShow extends Component {
   }
 
   handleEditSubmit = formData => {
-    const { formData: stateData } = this.state
-    const updatedEvent = merge(formData, stateData)
+    const { formData: stateData, date } = this.state
+    const updateEventObj = compose(assoc("date", date), merge(__, stateData))
+    const updatedEvent = updateEventObj(formData)
+
     this.props
       .dispatch(updateEvent(updatedEvent))
       .then(res => {
-        this.setState({
-          showSnackBar: true,
-          dirty: false,
-          snackBarText: "Event Saved!"
-        })
+        this.setState(
+          {
+            showSnackBar: true,
+            dirty: false,
+            snackBarText: "Event Saved!"
+          },
+          () => {
+            this.props.initialize(res)
+          }
+        )
       })
       .catch(err => {
-        console.log("err", err)
         this.setState({
           showSnackBar: true,
           snackBarText: `Event Save failed!`
@@ -194,6 +197,18 @@ class EventShow extends Component {
                         name="name"
                         placeholder="Event Name"
                         classes={classes}
+                      />
+                      <TextField
+                        id="date"
+                        label="date"
+                        type="date"
+                        value={this.state.date}
+                        className={classes.textField}
+                        margin="normal"
+                        InputLabelProps={{
+                          shrink: true
+                        }}
+                        onChange={e => this.setState({ date: e.target.value })}
                       />
                       <FormControlLabel
                         control={
@@ -273,6 +288,13 @@ class EventShow extends Component {
                         type="text"
                         name="zip"
                         placeholder="Zip"
+                        classes={classes}
+                      />
+                      <Field
+                        component={InputMat}
+                        type="textarea"
+                        name="parking"
+                        placeholder="Parking"
                         classes={classes}
                       />
                     </Paper>

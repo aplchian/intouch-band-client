@@ -3,11 +3,14 @@ import {
   SET_FILTERED_EVENTS,
   SET_FILTER_DATES_EVENTS,
   START_FETCHING_EVENTS,
-  CREATE_EVENT,
   RECEIVE_EVENT,
   TOGGLE_EVENT_SHOW
 } from "../constants"
-import { createEvent as createEventService, getAllEvents, updateEvent as updateEventService } from "../services/events"
+import {
+  createEvent as createEventService,
+  getAllEvents,
+  updateEvent as updateEventService
+} from "../services/events"
 
 export function setAllEvents(all) {
   return {
