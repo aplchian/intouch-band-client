@@ -13,9 +13,6 @@ import CloseIcon from "material-ui-icons/Close"
 import Slide from "material-ui/transitions/Slide"
 import TextField from "material-ui/TextField"
 import Tabs, { Tab } from "material-ui/Tabs"
-import Input from "material-ui/Input"
-import InputLabel from "material-ui/Input/InputLabel"
-import FormControl from "material-ui/Form/FormControl"
 import Grid from "material-ui/Grid"
 import { FormControlLabel } from "material-ui/Form"
 import Switch from "material-ui/Switch"
@@ -25,6 +22,7 @@ import { updateEvent } from "../../actions/events"
 import Snackbar from "material-ui/Snackbar"
 import Schedule from "./schedule"
 import moment from "moment"
+import MaterialInput from "../../components/MaterialInput"
 
 const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   root: {
@@ -56,28 +54,6 @@ const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   }
 }))
 
-const InputMat = props => {
-  const multiline = props.type === "textarea"
-  return (
-    <div className="mb2">
-      <FormControl fullWidth className={props.classes.formControl}>
-        <div className="w-90">
-          <InputLabel htmlFor="name">
-            {props.placeholder}
-          </InputLabel>
-          <Input
-            fullWidth
-            multiline={multiline}
-            id="name"
-            value={props.input.value}
-            {...props.input}
-            rows={5}
-          />
-        </div>
-      </FormControl>
-    </div>
-  )
-}
 
 class EventShow extends Component {
   constructor(props) {
@@ -192,7 +168,7 @@ class EventShow extends Component {
                   <Grid item xs={12} sm={6}>
                     <Paper className={classes.paper}>
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="name"
                         placeholder="Event Name"
@@ -224,21 +200,21 @@ class EventShow extends Component {
                         }
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="capacity"
                         placeholder="Capacity"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="textarea"
                         name="deal"
                         placeholder="Deal"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="textarea"
                         name="notes"
                         placeholder="Notes"
@@ -249,49 +225,49 @@ class EventShow extends Component {
                   <Grid item xs={12} sm={6}>
                     <Paper className={classes.paper}>
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="venue"
                         placeholder="Venue Name"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="addressone"
                         placeholder="Address One"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="addresstwo"
                         placeholder="Address Two"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="city"
                         placeholder="City"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="state"
                         placeholder="State"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="text"
                         name="zip"
                         placeholder="Zip"
                         classes={classes}
                       />
                       <Field
-                        component={InputMat}
+                        component={MaterialInput}
                         type="textarea"
                         name="parking"
                         placeholder="Parking"
