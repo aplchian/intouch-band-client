@@ -3,6 +3,7 @@ import "./App.css"
 import NavBar from "./components/NavBar"
 import EventsList from './pages/Events/list'
 
+
 class App extends Component {
   render() {
     return (

@@ -15,9 +15,19 @@ var schema = {
         properties: {
           id: { type: "string", required: true },
           name: { type: "string", required: true },
-          start: { type: "string" },
-          end: { type: "string" },
-          duration: { type: "string" }
+          time: {
+            type: "object",
+            properties: {
+              string: {
+                required: true,
+                type: "string"
+              },
+              unix: {
+                required: true,
+                type: "number"
+              }
+            }
+          }
         }
       }
     },

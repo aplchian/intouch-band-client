@@ -58,9 +58,7 @@ class EventsList extends Component {
   }
 
   render() {
-    const {
-      events: { filtered: filteredEvents }
-    } = this.props
+    const { events: { filtered: filteredEvents } } = this.props
 
     const renderEvents = curry((len, event, i) => {
       const { name, city, state } = event

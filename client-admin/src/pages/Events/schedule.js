@@ -1,5 +1,9 @@
 import React, { Component } from "react"
-import List, { ListItem, ListItemText } from "material-ui/List"
+import List, {
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction
+} from "material-ui/List"
 import FAB from "../../components/FAB"
 import Button from "material-ui/Button"
 import Dialog, {
@@ -8,9 +12,28 @@ import Dialog, {
   DialogTitle
 } from "material-ui/Dialog"
 import { withStyles, createStyleSheet } from "material-ui/styles"
-import TextField from "material-ui/TextField"
 import { Field, reduxForm } from "redux-form"
 import Slide from "material-ui/transitions/Slide"
+import MaterialInput from "../../components/MaterialInput"
+import "rc-time-picker/assets/index.css"
+// import TimePicker from "rc-time-picker"
+import moment from "moment-timezone"
+import {
+  inc,
+  times,
+  merge,
+  toString,
+  length,
+  curry,
+  assoc,
+  map,
+  lensProp,
+  over,
+  reject
+} from "ramda"
+import shortId from "shortid"
+import IconButton from "material-ui/IconButton"
+import DeleteIcon from "material-ui-icons/Delete"
 
 const styleSheet = createStyleSheet("TextFields", theme => ({
   textField: {
@@ -20,36 +43,97 @@ const styleSheet = createStyleSheet("TextFields", theme => ({
   }
 }))
 
-const Input = props => {
-  return (
-    <div className="mb2">
-      <TextField
-        id={props.name}
-        className={props.classes.textField}
-        InputProps={{ placeholder: props.placeholder }}
-        value={props.input.value}
-        {...props.input}
-      />
-    </div>
-  )
-}
-
 class Schedule extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: false
+      open: false,
+      hour: "12",
+      minute: "00",
+      timeOfDay: "pm"
+    }
+  }
+
+  resetTime = () => {
+    this.setState({
+      open: false,
+      hour: "12",
+      minute: "00",
+      timeOfDay: "pm"
+    })
+  }
+
+  handleOnAdd = formData => {
+    const { hour, minute, timeOfDay } = this.state
+    const timeString = `${hour}:${minute} ${timeOfDay}`
+    const time = {
+      string: timeString,
+      unix: moment(timeString, "h:mm a").unix()
+    }
+    const eventData = { time, id: shortId() }
+    const updatedEvent = merge(formData, eventData)
+    this.resetTime()
+    this.props.reset()
+    this.props.onAddEvent(updatedEvent)
+  }
+
+  handleRemoveEvent = id => {
+    const { event } = this.props
+    return e => {
+      // eslint-disable-next-line
+      if (confirm("Are you sure you want to remove this event?")) {
+        const removeEvent = schedule => {
+          return reject(event => event.id === id, schedule)
+        }
+        const scheduleLens = lensProp("schedule")
+        const updatedEvent = over(scheduleLens, removeEvent, event)
+        this.props.updateEvent(updatedEvent)
+      }
+    }
+  }
+
+  handleTimeChange = path => {
+    return e => {
+      const currentState = assoc(path, e.target.value, this.state)
+      this.setState(currentState)
     }
   }
 
   render() {
     const { classes } = this.props
+
+    const renderTime = curry((type, i) => {
+      const val = type === "hour" ? toString(inc(i)) : toString(i)
+      const stringifiedVal =
+        length(val) === 1 && type === "minute" ? `0${val}` : val
+      return (
+        <option value={stringifiedVal}>
+          {stringifiedVal}
+        </option>
+      )
+    })
+
+    const renderSchedule = item => {
+      // const { event: { timeZone = "US/Eastern" } } = this.props
+      return (
+        <ListItem button>
+          <ListItemText primary={item.time.string} secondary={item.name} />
+          <ListItemSecondaryAction>
+            <IconButton
+              aria-label="delete"
+              onClick={this.handleRemoveEvent(item.id)}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </ListItemSecondaryAction>
+        </ListItem>
+      )
+    }
+
     return (
       <div>
         <List>
-          <ListItem button>
-            <ListItemText primary="9:00" secondary={"Meeting With Robert"} />
-          </ListItem>
+          {map(renderSchedule, this.props.event.schedule)}
         </List>
         <Dialog
           open={this.state.open}
@@ -57,28 +141,52 @@ class Schedule extends Component {
           transition={<Slide direction="up" />}
         >
           <DialogTitle>Add Event</DialogTitle>
-          <form onSubmit={() => console.log("submit!")}>
-            <DialogContent>
+          <DialogContent>
+            <form className="mt2">
               <Field
-                component={Input}
+                component={MaterialInput}
                 type="text"
                 name="name"
-                placeholder="Name"
+                placeholder="Event"
                 classes={classes}
               />
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => this.setState({ open: false })}
-                color="primary"
-              >
-                Cancel
-              </Button>
-              <Button onClick={() => console.log("submit!")} color="primary">
-                Ok
-              </Button>
-            </DialogActions>
-          </form>
+              <div>
+                <select
+                  value={this.state.hour}
+                  onChange={this.handleTimeChange("hour")}
+                >
+                  {times(renderTime("hour"), 12)}
+                </select>
+                <span> : </span>
+                <select
+                  value={this.state.minute}
+                  onChange={this.handleTimeChange("minute")}
+                >
+                  {times(renderTime("minute"), 60)}
+                </select>
+                <label>Time Zone:</label>
+                <select
+                  value={this.state.timeOfDay}
+                  onChange={this.handleTimeChange("timeOfDay")}
+                  className="ml1"
+                >
+                  <option value="pm">pm</option>
+                  <option value="am">am</option>
+                </select>
+              </div>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.resetTime} color="primary">
+              Cancel
+            </Button>
+            <Button
+              onClick={this.props.handleSubmit(this.handleOnAdd)}
+              color="primary"
+            >
+              Ok
+            </Button>
+          </DialogActions>
         </Dialog>
         <FAB onClick={() => this.setState({ open: true })} />
       </div>

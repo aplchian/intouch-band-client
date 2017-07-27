@@ -17,12 +17,13 @@ import Grid from "material-ui/Grid"
 import { FormControlLabel } from "material-ui/Form"
 import Switch from "material-ui/Switch"
 import SaveIcon from "material-ui-icons/Save"
-import { merge, assoc, compose, __ } from "ramda"
+import { merge, assoc, compose, __, append } from "ramda"
 import { updateEvent } from "../../actions/events"
 import Snackbar from "material-ui/Snackbar"
 import Schedule from "./schedule"
 import moment from "moment"
 import MaterialInput from "../../components/MaterialInput"
+// import timeZones from "../../utilities/timeZones"
 
 const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   root: {
@@ -54,7 +55,6 @@ const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   }
 }))
 
-
 class EventShow extends Component {
   constructor(props) {
     super(props)
@@ -78,16 +78,30 @@ class EventShow extends Component {
   handleChange = (event, index) => {
     this.setState({ index })
   }
+
   handleConfirmedChange = (event, confirmed) => {
     const dirty = confirmed !== !!this.props.event.confirmed
     this.setState({ formData: { confirmed }, dirty })
   }
 
-  handleEditSubmit = formData => {
-    const { formData: stateData, date } = this.state
-    const updateEventObj = compose(assoc("date", date), merge(__, stateData))
-    const updatedEvent = updateEventObj(formData)
+  handleTimeZoneChange = e => {
+    const { event } = this.props
+    const updatedEvent = assoc("timeZone", e.target.value, event)
+    this.updateEvent(updatedEvent)
+  }
 
+  onAddEvent = newEvent => {
+    const { event: { schedule }, event } = this.props
+    const updatedSchedule = append(newEvent, schedule)
+    const updatedEvent = assoc("schedule", updatedSchedule, event)
+    this.updateEvent(updatedEvent)
+  }
+
+  onRemoveEvent = event => {
+    console.log("event! remove", event)
+  }
+
+  updateEvent = updatedEvent => {
     this.props
       .dispatch(updateEvent(updatedEvent))
       .then(res => {
@@ -95,7 +109,7 @@ class EventShow extends Component {
           {
             showSnackBar: true,
             dirty: false,
-            snackBarText: "Event Saved!"
+            snackBarText: "Event Updated!"
           },
           () => {
             this.props.initialize(res)
@@ -110,6 +124,13 @@ class EventShow extends Component {
       })
   }
 
+  handleEditSubmit = formData => {
+    const { formData: stateData, date } = this.state
+    const updateEventObj = compose(assoc("date", date), merge(__, stateData))
+    const updatedEvent = updateEventObj(formData)
+    this.updateEvent(updatedEvent)
+  }
+
   handleCloseSnackBar = () => {
     this.setState({
       showSnackBar: false
@@ -118,6 +139,14 @@ class EventShow extends Component {
 
   render() {
     const { classes, event } = this.props
+
+    // const renderTimeZoneOptions = ({ label }) => {
+    //   return (
+    //     <option value={label}>
+    //       {label}
+    //     </option>
+    //   )
+    // }
 
     return (
       <Dialog
@@ -224,6 +253,14 @@ class EventShow extends Component {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Paper className={classes.paper}>
+                      {/* <label className="db gray f6 mb2">* TimeZone</label>
+                      <select
+                        value={this.props.event.timeZone}
+                        onChange={this.handleTimeZoneChange}
+                        className="ml1 mb2"
+                      >
+                        {map(renderTimeZoneOptions, timeZones)}
+                      </select> */}
                       <Field
                         component={MaterialInput}
                         type="text"
@@ -277,7 +314,13 @@ class EventShow extends Component {
                   </Grid>
                 </Grid>
               </div>}
-            {this.state.index === 1 && <Schedule />}
+            {this.state.index === 1 &&
+              <Schedule
+                onAddEvent={this.onAddEvent}
+                onRemoveEvent={this.onRemoveEvent}
+                updateEvent={this.updateEvent}
+                event={this.props.event}
+              />}
             {this.state.index === 2 && <h1>Contacts</h1>}
             {this.state.index === 3 && <h1>File</h1>}
           </div>
