@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 app.get("/events/:band", (req, res) => {
   getAllEvents(req.params.band)
     .then(docs => {
-      console.log("docs", docs)
+      // console.log("docs", docs)
       res.status(200).send(docs)
     })
     .catch(err => {
@@ -39,6 +39,7 @@ app.post("/events", async (req, res, next) => {
 app.put("/events", async (req, res, next) => {
   try {
     const event = await updateEvent(req.body.event)
+    console.log('event', event)
     res.status(200).send(event)
   } catch (error) {
     return next(createError(400, error.message))

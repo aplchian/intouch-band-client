@@ -133,7 +133,9 @@ class Schedule extends Component {
     return (
       <div>
         <List>
-          {map(renderSchedule, this.props.event.schedule)}
+          {length(this.props.event.schedule) > 0
+            ? map(renderSchedule, this.props.event.schedule)
+            : <h1>No schedule items! Click the + to add a schedule item.</h1>}
         </List>
         <Dialog
           open={this.state.open}
@@ -164,7 +166,6 @@ class Schedule extends Component {
                 >
                   {times(renderTime("minute"), 60)}
                 </select>
-                <label>Time Zone:</label>
                 <select
                   value={this.state.timeOfDay}
                   onChange={this.handleTimeChange("timeOfDay")}

@@ -21,6 +21,7 @@ import { merge, assoc, compose, __, append } from "ramda"
 import { updateEvent } from "../../actions/events"
 import Snackbar from "material-ui/Snackbar"
 import Schedule from "./schedule"
+import Contacts from "./contacts"
 import moment from "moment"
 import MaterialInput from "../../components/MaterialInput"
 // import timeZones from "../../utilities/timeZones"
@@ -48,7 +49,8 @@ const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   },
   container: {
     flexGrow: 1,
-    margin: "30px 10px 0 10px"
+    margin: "30px 10px 0 10px",
+    overflow: 'scroll'
   },
   formControl: {
     margin: theme.spacing.unit
@@ -117,6 +119,7 @@ class EventShow extends Component {
         )
       })
       .catch(err => {
+        console.log("err", err)
         this.setState({
           showSnackBar: true,
           snackBarText: `Event Save failed!`
@@ -155,44 +158,44 @@ class EventShow extends Component {
         onRequestClose={this.props.handleClose}
         transition={<Slide direction="left" />}
       >
-        <form>
-          <AppBar position="static">
-            <Toolbar>
-              <IconButton
-                color="contrast"
-                onClick={this.props.handleClose}
-                aria-label="Close"
-              >
-                <CloseIcon />
-              </IconButton>
-              <Typography type="title" color="inherit" className={classes.flex}>
-                {event.name}
-              </Typography>
-            </Toolbar>
-            <Tabs
-              index={this.state.index}
-              onChange={this.handleChange}
-              scrollable
-              scrollButtons="auto"
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              color="contrast"
+              onClick={this.props.handleClose}
+              aria-label="Close"
             >
-              <Tab label="Info" />
-              <Tab label="Schedule" />
-              <Tab label="Contacts" />
-              <Tab label="Files" />
-            </Tabs>
-          </AppBar>
+              <CloseIcon />
+            </IconButton>
+            <Typography type="title" color="inherit" className={classes.flex}>
+              {event.name}
+            </Typography>
+          </Toolbar>
+          <Tabs
+            index={this.state.index}
+            onChange={this.handleChange}
+            scrollable
+            scrollButtons="auto"
+          >
+            <Tab label="Info" />
+            <Tab label="Schedule" />
+            <Tab label="Contacts" />
+            <Tab label="Files" />
+          </Tabs>
+        </AppBar>
 
-          <div className={classes.container}>
-            {this.state.index === 0 &&
-              <div>
-                <Button
-                  color="accent"
-                  className="fr"
-                  onClick={this.props.handleSubmit(this.handleEditSubmit)}
-                >
-                  <SaveIcon />
-                  Save
-                </Button>
+        <div className={classes.container}>
+          {this.state.index === 0 &&
+            <div>
+              <Button
+                color="accent"
+                className="fr"
+                onClick={this.props.handleSubmit(this.handleEditSubmit)}
+              >
+                <SaveIcon />
+                Save
+              </Button>
+              <form>
                 <Grid container gutter={24}>
                   <Grid item xs={12} sm={6}>
                     <Paper className={classes.paper}>
@@ -313,18 +316,23 @@ class EventShow extends Component {
                     </Paper>
                   </Grid>
                 </Grid>
-              </div>}
-            {this.state.index === 1 &&
-              <Schedule
-                onAddEvent={this.onAddEvent}
-                onRemoveEvent={this.onRemoveEvent}
-                updateEvent={this.updateEvent}
-                event={this.props.event}
-              />}
-            {this.state.index === 2 && <h1>Contacts</h1>}
-            {this.state.index === 3 && <h1>File</h1>}
-          </div>
-        </form>
+              </form>
+            </div>}
+          {this.state.index === 1 &&
+            <Schedule
+              onAddEvent={this.onAddEvent}
+              onRemoveEvent={this.onRemoveEvent}
+              updateEvent={this.updateEvent}
+              event={this.props.event}
+            />}
+          {this.state.index === 2 &&
+            <Contacts
+              updateEvent={this.updateEvent}
+              event={this.props.event}
+            />}
+          {this.state.index === 3 && <h1>File</h1>}
+        </div>
+
         <Snackbar
           open={this.state.showSnackBar}
           onRequestClose={this.handleCloseSnackBar}

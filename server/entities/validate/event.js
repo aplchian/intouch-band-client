@@ -67,8 +67,7 @@ var schema = {
       type: "string"
     },
     confirmed: {
-      type: "boolean",
-      required: true
+      type: "boolean"
     }
   }
 }
