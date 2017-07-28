@@ -45,6 +45,19 @@ var schema = {
         }
       }
     },
+    files: {
+      type: "array",
+      required: true,
+      items: {
+        type: "object",
+        properties: {
+          id: { type: "string", required: true },
+          name: { type: "string", required: true },
+          bucket: { type: "string", required: true },
+          url: { type: "string", required: true }
+        }
+      }
+    },
     date: {
       type: "string"
     },

@@ -64,6 +64,13 @@ class Schedule extends Component {
     }
   }
 
+  resetForm = () => {
+    this.props.reset()
+    this.setState({
+      open: false
+    })
+  }
+
   handleOnAdd = formData => {
     const { event } = this.props
     const eventData = { id: shortId() }
@@ -71,10 +78,7 @@ class Schedule extends Component {
     const updatedContacts = append(updatedContact, prop("contacts", event))
     const updatedEvent = assoc("contacts", updatedContacts, event)
     this.props.updateEvent(updatedEvent)
-    this.props.reset()
-    this.setState({
-      open: false
-    })
+    this.resetForm()
   }
 
   handleRemoveContact = id => {
@@ -193,7 +197,7 @@ class Schedule extends Component {
             </form>
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.resetTime} color="primary">
+            <Button onClick={this.resetForm} color="primary">
               Cancel
             </Button>
             <Button

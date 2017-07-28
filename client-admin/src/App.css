@@ -22,3 +22,10 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.SimplePDF {
+  overflow: scroll;
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}

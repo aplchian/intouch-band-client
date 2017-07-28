@@ -22,6 +22,7 @@ import { updateEvent } from "../../actions/events"
 import Snackbar from "material-ui/Snackbar"
 import Schedule from "./schedule"
 import Contacts from "./contacts"
+import Files from "./files"
 import moment from "moment"
 import MaterialInput from "../../components/MaterialInput"
 // import timeZones from "../../utilities/timeZones"
@@ -50,7 +51,7 @@ const styleSheet = createStyleSheet("CenteredTabs", theme => ({
   container: {
     flexGrow: 1,
     margin: "30px 10px 0 10px",
-    overflow: 'scroll'
+    overflow: "scroll"
   },
   formControl: {
     margin: theme.spacing.unit
@@ -330,7 +331,11 @@ class EventShow extends Component {
               updateEvent={this.updateEvent}
               event={this.props.event}
             />}
-          {this.state.index === 3 && <h1>File</h1>}
+          {this.state.index === 3 &&
+            <Files
+              updateEvent={this.updateEvent}
+              event={this.props.event}
+            />}
         </div>
 
         <Snackbar
