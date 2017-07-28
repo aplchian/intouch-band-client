@@ -122,7 +122,7 @@ class Schedule extends Component {
       // const { event: { timeZone = "US/Eastern" } } = this.props
       return (
         <ListItem button>
-          <a href={item.url} targe="_blank">
+          <a href={item.url} target="_blank">
             <ListItemText primary={item.name} />
           </a>
           <ListItemSecondaryAction>

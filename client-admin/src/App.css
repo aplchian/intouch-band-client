@@ -29,3 +29,8 @@
   overflow-x: scroll;
   overflow-y: scroll;
 }
+
+.DateRangePickerInput {
+   border: none !important;
+   margin-top: 16px;
+}
