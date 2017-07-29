@@ -20,6 +20,7 @@
     "http-errors": "^1.6.1",
     "jest": "^20.0.4",
     "jsonschema": "^1.1.1",
+    "moment": "^2.18.1",
     "nodemon": "^1.11.0",
     "pouchdb": "^6.3.4",
     "pouchdb-find": "^6.3.4",

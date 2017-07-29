@@ -1,20 +1,30 @@
-const PouchDB = require("pouchdb");
-PouchDB.plugin(require("pouchdb-find"));
-const db = new PouchDB(process.env.DB_URL);
+const PouchDB = require("pouchdb")
+PouchDB.plugin(require("pouchdb-find"))
+const db = new PouchDB(process.env.DB_URL)
+const { sort, pluck } = require("ramda")
+const moment = require("moment")
 
-module.exports = { getAllEvents };
+module.exports = { getAllEvents }
 
 function getAllEvents(band) {
   return db
     .createIndex({
-      index: { fields: ["band","type"] }
+      index: { fields: ["band", "type"] }
     })
     .then(function() {
       return db.find({
-        selector: { 
+        selector: {
           band: { $eq: band },
-          type: { $eq: 'event' }
-         }
+          type: { $eq: "event" }
+        }
       })
     })
+    .then(sortDocs)
+}
+
+function sortDocs({ docs }) {
+  const sortEm = (a, b) =>
+    moment(a.date, "YYYY-MM-DD").unix() - moment(b.date, "YYYY-MM-DD").unix()
+  const sortedEvents = sort(sortEm, docs)
+  return { docs: sortedEvents }
 }
