@@ -9,7 +9,8 @@ import {
 import {
   createEvent as createEventService,
   getAllEvents,
-  updateEvent as updateEventService
+  updateEvent as updateEventService,
+  deleteEvent as deleteEventService
 } from "../services/events"
 
 export function setAllEvents(all) {
@@ -74,6 +75,20 @@ export function updateEvent(event) {
   return dispatch => {
     return updateEventService(event).then(res => {
       dispatch(receiveEvent(res.data))
+      dispatch(startFetchingEvents())
+      getAllEvents(
+        "band_Stop_Light_Observations"
+      ).then(({ data: { docs: allEvents } }) => {
+        dispatch(setAllEvents(allEvents))
+      })
+      return res.data
+    })
+  }
+}
+
+export function deleteEvent(eventID) {
+  return dispatch => {
+    return deleteEventService(eventID).then(res => {
       dispatch(startFetchingEvents())
       getAllEvents(
         "band_Stop_Light_Observations"

@@ -8,7 +8,7 @@ import "pdfjs-dist"
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div className="App pb5">
         <NavBar />
         <EventsList />
       </div>

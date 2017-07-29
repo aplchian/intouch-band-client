@@ -1,6 +1,5 @@
 const axios = require("axios")
 
-
 // 3090
 
 var api = axios.create({
@@ -23,4 +22,8 @@ export function createEvent(event) {
 
 export function updateEvent(event) {
   return api.put(`/events`, { event })
+}
+
+export function deleteEvent(eventID) {
+  return api.delete(`/events/${eventID}`)
 }

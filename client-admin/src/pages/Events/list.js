@@ -1,16 +1,27 @@
+import Slide from "material-ui/transitions/Slide"
 import React, { Component } from "react"
 import { withStyles, createStyleSheet } from "material-ui/styles"
-import List, { ListItem, ListItemText } from "material-ui/List"
+import List, {
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction
+} from "material-ui/List"
 import Divider from "material-ui/Divider"
 import AddEvent from "./add"
 import { connect } from "react-redux"
 import { map, addIndex, curry, length, inc } from "ramda"
-import { receiveEvent, toggleEventRenderShowPage, setEventFilterDates } from "../../actions/events"
+import {
+  receiveEvent,
+  toggleEventRenderShowPage,
+  setEventFilterDates,
+  deleteEvent
+} from "../../actions/events"
 import EventsShow from "./show"
 import FAB from "../../components/FAB"
-import FilterIcon from "material-ui-icons/FilterList"
 import IconButton from "material-ui/IconButton"
+import DeleteIcon from "material-ui-icons/Delete"
 import { DateRangePicker } from "react-dates"
+import Snackbar from "material-ui/Snackbar"
 const mapIndex = addIndex(map)
 
 const styleSheet = createStyleSheet("FullScreenDialog", {
@@ -31,7 +42,8 @@ class EventsList extends Component {
     super(props)
     this.state = {
       open: false,
-      showOpen: false
+      showOpen: false,
+      showSnackBar: false
     }
   }
 
@@ -51,7 +63,7 @@ class EventsList extends Component {
     this.props.dispatch(toggleEventRenderShowPage(false))
   }
 
-  setDates = (dates) => {
+  setDates = dates => {
     this.props.dispatch(setEventFilterDates(dates))
   }
 
@@ -64,15 +76,37 @@ class EventsList extends Component {
     }
   }
 
+  handleDeleteEvent = ({ _id, name }) => {
+    return e => {
+      // eslint-disable-next-line
+      if (confirm(`Are you sure you want to delete ${name}?`)) {
+        this.props.dispatch(deleteEvent(_id)).then(res => {
+          this.setState({
+            showSnackBar: true,
+            snackBarText: `Event Deleted Succesfully!`
+          })
+        })
+      }
+    }
+  }
+
   render() {
     const { events: { filtered: filteredEvents } } = this.props
 
     const renderEvents = curry((len, event, i) => {
-      const { name, city, state } = event
+      const { name, city, state, _id } = event
       return (
         <div key={i}>
           <ListItem onClick={this.handleEventClick(event)} button>
             <ListItemText primary={name} secondary={`${city}, ${state}`} />
+            <ListItemSecondaryAction>
+              <IconButton
+                aria-label="delete"
+                onClick={this.handleDeleteEvent({ _id, name })}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
           </ListItem>
           {len === inc(i) ? null : <Divider />}
         </div>
@@ -103,6 +137,19 @@ class EventsList extends Component {
           open={this.state.open}
           handleClose={this.handleRequestClose}
           dispatch={this.props.dispatch}
+        />
+        <Snackbar
+          open={this.state.showSnackBar}
+          onRequestClose={() => this.setState({ showSnackBar: false })}
+          transition={<Slide direction="up" />}
+          SnackbarContentProps={{
+            "aria-describedby": "message-id"
+          }}
+          message={
+            <span id="message-id">
+              {this.state.snackBarText}
+            </span>
+          }
         />
       </div>
     )
