@@ -33,6 +33,9 @@ const EventList = props => {
           <span className="left db">
             {item.name}
           </span>
+          <span className="left f6 gray db">
+            {moment(item.date).format('dddd MMM Do')}
+          </span>
           <span className="left db f6 gray">
             {item.city ? `${item.city}, ${item.state}` : null}
           </span>

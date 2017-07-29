@@ -8,6 +8,6 @@ module.exports = {
 // const 
 
 function getAllEvents(band){
-  return axios(`http://localhost:3090/events/${band}`)
+  return axios(`https://intouch-band-api-snhldtdgxg.now.sh/events/${band}`)
 }
 

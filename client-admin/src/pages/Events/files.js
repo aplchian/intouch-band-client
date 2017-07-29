@@ -22,7 +22,7 @@ import IconButton from "material-ui/IconButton"
 import DeleteIcon from "material-ui-icons/Delete"
 import Dropzone from "react-dropzone"
 
-var AWS = require("aws-sdk")
+var { config, S3, CognitoIdentityCredentials } = require("aws-sdk")
 
 const styleSheet = createStyleSheet("TextFields", theme => ({
   textField: {
@@ -89,13 +89,14 @@ class Schedule extends Component {
   }
 
   onDrop = ([file]) => {
-    AWS.config.update({
+    config.update({
       region: "us-east-1",
-      credentials: new AWS.CognitoIdentityCredentials({
+      credentials: new CognitoIdentityCredentials({
         IdentityPoolId: "us-east-1:b905a98c-63ac-498a-9572-65e6a8c89a39"
       })
     })
-    var s3 = new AWS.S3({
+
+    var s3 = new S3({
       apiVersion: "2006-03-01",
       params: { Bucket: "intouch-aplchian" }
     })
@@ -117,7 +118,6 @@ class Schedule extends Component {
   }
 
   render() {
-
     const renderSchedule = item => {
       // const { event: { timeZone = "US/Eastern" } } = this.props
       return (
@@ -153,6 +153,5 @@ class Schedule extends Component {
     )
   }
 }
-
 
 export default withStyles(styleSheet)(Schedule)

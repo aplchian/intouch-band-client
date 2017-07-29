@@ -33,8 +33,8 @@ const Daysheet = props => {
 
   return (
     <div>
-      <h5>
-        {moment().format("L")}
+      <h5 className="tc">
+        Today is {moment().format('dddd, MMM Do')}!🤘🏻
       </h5>
       {props.events.isFetching
         ? <div className="center">

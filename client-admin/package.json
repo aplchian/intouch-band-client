@@ -12,7 +12,6 @@
     "material-ui-icons": "^1.0.0-alpha.19",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
-    "pdfjs-dist": "^1.8.583",
     "ramda": "^0.24.1",
     "rc-time-picker": "^2.4.1",
     "react": "^15.6.1",
@@ -26,12 +25,14 @@
     "redux-form": "^7.0.1",
     "redux-thunk": "^2.2.0",
     "shortid": "^2.2.8",
+    "source-map-explorer": "^1.4.0",
     "typeface-roboto": "0.0.31"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer build/static/js/main.*"
   }
 }
