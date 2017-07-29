@@ -1,56 +1,93 @@
-import { Card, ListItem, List } from 'react-onsenui'
-import React from 'react'
-import { curry, length } from 'ramda'
-import moment from 'moment-timezone'
+import { Card, ListItem, List } from "react-onsenui"
+import React from "react"
+import { curry, length, map } from "ramda"
+import moment from "moment-timezone"
+import shortId from "shortid"
 
 export default curry((event, x) => {
   const renderSchedule = event => {
+    const { name = "", time: { string } } = event
     return (
-      <ListItem>
+      <ListItem key={shortId()}>
         <span className="f6">
-          {event.event}
+          {name}
         </span>
         <span className="f6 gray right">
-          {moment.unix(event.starttime).tz('America/New_York').format('h:mm a')}
+          {string}
         </span>
       </ListItem>
     )
   }
 
-  const renderContact = contact => {
+  const renderContacts = contact => {
     return (
-      <ListItem>
-        <div className="f6 db">
-          {contact.name}
-        </div>
-        <br />
-        <div className="f6 gray db">
+      <div key={shortId()} className="mb3">
+        <div className="f5 db mb1 bold">
           {contact.type}
         </div>
-        <div className="f6 gray db">
-          {contact.phone}
+        <div className="f6 db mb1">
+          {contact.name}
         </div>
-        <div className="f6 gray db">
-          {contact.email}
-        </div>
+        <a href={`tel:${contact.phone}`}>
+          <div className="f6 db mb1">
+            {contact.phone}
+          </div>
+        </a>
+        <a href={`mailto:${contact.email}`}>
+          <div className="f6 db mb1">
+            {contact.email}
+          </div>
+        </a>
+      </div>
+    )
+  }
+
+  const renderFiles = file => {
+    return (
+      <ListItem key={shortId()}>
+        <a href={file.url} target="_blank">
+          <span className="f6">
+            {file.name}
+          </span>
+        </a>
       </ListItem>
     )
   }
 
   return (
-    <div>
+    <div style={{ whiteSpace: "pre-wrap" }}>
       <Card>
         <h1 className="tc">
           {event.name}
         </h1>
         <h3 className="tc">
-          {moment(event.data).format('L')}
+          {moment(event.data).format("L")}
         </h3>
       </Card>
       {length(event.schedule) > 0
         ? <Card>
             <h4>Schedule</h4>
             <List dataSource={event.schedule} renderRow={renderSchedule} />
+          </Card>
+        : null}
+      {event.addressone || event.city
+        ? <Card>
+            <h4>Address</h4>
+            <span className="mb2 db f4">
+              {event.venue}
+            </span>
+            <span className="mb2 db">
+              {event.addressone}
+            </span>
+            <span className="mb2 db">
+              {event.addresstwo}
+            </span>
+            <span className="mb2 db">
+              {event.city}, {event.state}
+            </span>
+            <span className="mb2 db">
+              {event.zip}
+            </span>
           </Card>
         : null}
       {event.deal
@@ -77,10 +114,16 @@ export default curry((event, x) => {
             </p>
           </Card>
         : null}
-      {length(event.contact) > 0
+      {length(event.contacts) > 0
         ? <Card>
-            <h4>Contact</h4>
-            <List dataSource={event.contact} renderRow={renderContact} />
+            <h4>Contacts</h4>
+            {map(renderContacts, event.contacts)}
+          </Card>
+        : null}
+      {length(event.files) > 0
+        ? <Card>
+            <h4>Files</h4>
+            <List dataSource={event.files} renderRow={renderFiles} />
           </Card>
         : null}
     </div>

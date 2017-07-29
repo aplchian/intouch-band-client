@@ -1,33 +1,31 @@
-import { connect } from 'react-redux'
-import { Card, ListItem, List } from 'react-onsenui'
-import Loading from 'react-loading-animation'
-import React from 'react'
-import { prop, pluck, flatten, sort, length } from 'ramda'
-import filterEventsByDate from '../../reducers/helpers/filterEventsByDate'
-import moment from 'moment-timezone'
+import { connect } from "react-redux"
+import { Card, ListItem, List } from "react-onsenui"
+import Loading from "react-loading-animation"
+import React from "react"
+import { prop, pluck, flatten, sort, length } from "ramda"
+import filterEventsByDate from "../../reducers/helpers/filterEventsByDate"
+import moment from "moment-timezone"
 
 const Daysheet = props => {
   const today = moment()
 
   const todaysEvents = !props.events.isFetching
-    ? prop('filtered', filterEventsByDate(today, today, props.events.all, {}))
+    ? prop("filtered", filterEventsByDate(today, today, props.events.all, {}))
     : []
 
   const schedule = sort(
-    (a, b) => a.starttime - b.starttime,
-    flatten(pluck('schedule', todaysEvents))
+    (a, b) => a.time.unix - b.time.unix,
+    flatten(pluck("schedule", todaysEvents))
   )
-
-  console.log('schedule', schedule)
 
   const renderSchedule = event => {
     return (
       <ListItem>
         <span className="f6">
-          {event.event}
+          {event.name}
         </span>
         <span className="f6 gray right">
-          {moment.unix(event.starttime).tz('America/New_York').format('h:mm a')}
+          {event.time.string}
         </span>
       </ListItem>
     )
@@ -36,7 +34,7 @@ const Daysheet = props => {
   return (
     <div>
       <h5>
-        {moment().format('L')}
+        {moment().format("L")}
       </h5>
       {props.events.isFetching
         ? <div className="center">
@@ -50,7 +48,7 @@ const Daysheet = props => {
                 </Card>
               : <Card>
                   <h1>
-                    There is nothing planned for the day!{' '}
+                    There is nothing planned for the day!{" "}
                     <span role="img" aria-label="sleepy">
                       😴
                     </span>

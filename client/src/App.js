@@ -5,6 +5,7 @@ import './styles.css'
 import moment from 'moment'
 import EventsListPage from './components/Events/List'
 import DaySheetView from './components/DaySheet/View'
+import shortId from 'shortid'
 
 require('onsenui')
 

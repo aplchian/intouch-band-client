@@ -1,6 +1,6 @@
 import React from 'react'
 
-const { ListHeader } = require("react-onsenui");
+const { ListHeader } = require("react-onsenui")
 
 const renderEventsHeader = () => {
   return (
