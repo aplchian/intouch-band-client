@@ -4,7 +4,8 @@ import {
   SET_FILTER_DATES_EVENTS,
   START_FETCHING_EVENTS,
   RECEIVE_EVENT,
-  TOGGLE_EVENT_SHOW
+  TOGGLE_EVENT_SHOW,
+  SET_USER
 } from "../constants"
 import {
   createEvent as createEventService,
@@ -17,6 +18,13 @@ export function setAllEvents(all) {
   return {
     type: SET_ALL_EVENTS,
     payload: { all, filtered: all, isFetching: false }
+  }
+}
+
+export function setUser(user) {
+  return {
+    type: SET_USER,
+    payload: { user }
   }
 }
 

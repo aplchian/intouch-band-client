@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux"
 import thunk from "redux-thunk"
 import events from "./reducers/events"
+import users from "./reducers/users"
 import { getAllEvents } from "./services/events"
 import { setAllEvents, startFetchingEvents } from "./actions/events"
 import { reducer as formReducer } from "redux-form"
@@ -11,6 +12,7 @@ const composeWithDevTools =
 const store = createStore(
   combineReducers({
     events,
+    users,
     form: formReducer
   }),
   composeWithDevTools(applyMiddleware(thunk))

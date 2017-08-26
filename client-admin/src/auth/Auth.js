@@ -23,9 +23,10 @@ export default class Auth {
   }
 
   handleAuthentication() {
+    var authObj
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
-        console.log('authResult', authResult)
+        authObj = authResult
         this.setSession(authResult)
         // history.replace("/home")
       } else if (err) {
@@ -33,6 +34,8 @@ export default class Auth {
         console.log(err)
       }
     })
+    console.log('authobj', authObj)
+    return authObj
   }
 
   setSession(authResult) {
