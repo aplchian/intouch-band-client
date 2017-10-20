@@ -71,6 +71,7 @@ const EventList = props => {
         focusedInput={focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
         onFocusChange={handleFocusChange}
         orientation="vertical"
+        isOutsideRange={(x) => false}
       />
       <List
         dataSource={filtered}
