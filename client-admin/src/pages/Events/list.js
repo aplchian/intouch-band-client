@@ -121,6 +121,7 @@ class EventsList extends Component {
           onDatesChange={this.setDates} // PropTypes.func.isRequired,
           focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
           onFocusChange={focusedInput => this.setState({ focusedInput })} // PropTypes.func.isRequired,
+          isOutsideRange={(x) => false}
         />
         <List>
           {mapIndex(renderEvents(length(filteredEvents)), filteredEvents)}
