@@ -1,20 +1,25 @@
-version: 1
+
 machine:
-  timezone:
-    America/New_York
+  environment:
+    PATH: "/home/ubuntu/intouch-band-client/server"
   node:
     version: 8.1.0
-  test:
-    override:
-      - echo "done"  
-  dependencies:
-   pre:
-    - curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
-    - sudo dpkg -i cf-cli_amd64.deb
-    - cf -v
+
+dependencies:
+  override:
+    - yarn
+  cache_directories:
+    - ~/.cache/yarn
+  pre:
+    - yarn global add now
+
+test:
+  override:
+    - yarn test
+
 deployment:
-  production:
+  development:
     branch: master
     commands:
-      - cd /home/ubuntu/intouch-band-client/server && npm install && npm list --depth=0
-      - now . -t $NOW_CLI_TOKEN -e DB=$DB_URL -e -e DEV=false --alias test-intouch-api.now.sh
+      - now -t ${NOW_CLI_TOKEN}
+  
