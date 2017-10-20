@@ -1,0 +1,20 @@
+version: 1
+machine:
+  timezone:
+    America/New_York
+  node:
+    version: 8.1.0
+  test:
+    override:
+      - echo "done"  
+  dependencies:
+   pre:
+    - curl -v -L -o cf-cli_amd64.deb 'https://cli.run.pivotal.io/stable?release=debian64&source=github'
+    - sudo dpkg -i cf-cli_amd64.deb
+    - cf -v
+deployment:
+  production:
+    branch: master
+    commands:
+      - cd /home/ubuntu/intouch-band-client/server && npm install && npm list --depth=0
+      - now . --token $NOW_CLI_TOKEN -e DB=$DB_URL -e -e DEV=false --alias test-intouch-api.now.sh
