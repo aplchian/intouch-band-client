@@ -21,5 +21,5 @@ deployment:
   development:
     branch: master
     commands:
-      - now -t ${NOW_TOKEN}
-      - now -t ${NOW_TOKEN} alias foo-dev-1239
+      - now -t ${NOW_CLI_TOKEN}
+      - now -t ${NOW_CLI_TOKEN} alias foo-dev-1239
