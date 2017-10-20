@@ -16,5 +16,6 @@ deployment:
   production:
     branch: master
     commands:
-      - cd /home/ubuntu/intouch-band-client/server/node_modules/.bin && npm install && npm list --depth=0
+      - cd /home/ubuntu/intouch-band-client/server && npm install && npm list --depth=0
+      - cd /node_modules/.bin
       - now . --token $NOW_CLI_TOKEN -e DB=$DB_URL -e -e DEV=false --alias test-intouch-api.now.sh
