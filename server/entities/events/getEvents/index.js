@@ -1,7 +1,7 @@
 const PouchDB = require("pouchdb")
 PouchDB.plugin(require("pouchdb-find"))
 const db = new PouchDB(process.env.DB_URL)
-const { sort, pluck } = require("ramda")
+const { sort } = require("ramda")
 const moment = require("moment")
 
 module.exports = { getAllEvents }
