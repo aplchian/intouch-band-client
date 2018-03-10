@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  client: 
+    build: ./client
+    volumes:
+      - ./client/:/src
+    command: npm run start
+    ports:
+      - 3000:3000
+    environment:
+      - REACT_APP_API=http://0.0.0.0:3090
+    depends_on:
+      - server
+  client-admin: 
+    build: ./client-admin
+    volumes:
+      - ./client-admin/:/src
+    command: npm run dev
+    ports:
+      - 3001:3001
+    environment:
+      - REACT_APP_API=http://0.0.0.0:3090
+    depends_on:
+      - server
+  server: 
+    build: ./server
+    volumes:
+      - ./server/:/src
+    command: npm run dev
+    ports:
+      - 3090:3090
