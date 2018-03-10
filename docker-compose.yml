@@ -20,7 +20,8 @@ services:
     ports:
       - 3001:3001
     environment:
-      - REACT_APP_API=http://0.0.0.0:3090
+      - REACT_APP_ENVIRONMENT=development
+      - REACT_APP_API_DEV=http://0.0.0.0:3090
     depends_on:
       - server
   server: 
