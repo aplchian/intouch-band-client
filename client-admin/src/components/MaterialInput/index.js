@@ -20,6 +20,11 @@ export default props => {
             value={props.input.value}
             {...props.input}
             rows={5}
+            inputProps={{
+              style: {
+                height: '30px'
+              }
+            }}
           />
         </div>
       </FormControl>
