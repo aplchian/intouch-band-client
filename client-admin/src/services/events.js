@@ -3,7 +3,7 @@ const axios = require("axios")
 // 3090
 
 var api = axios.create({
-  baseURL: "https://intouch-band-api-snhldtdgxg.now.sh",
+  baseURL: process.env.REACT_APP_API,
   timeout: 10000
 })
 
