@@ -5,7 +5,7 @@ const { getAllEvents } = require("./entities/events/getEvents")
 const createEvent = require("./entities/events/createEvent")
 const updateEvent = require("./entities/events/updateEvent")
 const createError = require("http-errors")
-const deleteDoc = require('./entities/base/deleteDoc')
+const deleteDoc = require("./entities/base/deleteDoc")
 
 const cors = require("cors")
 app.use(bodyParser.json())
@@ -15,6 +15,12 @@ app.use(cors())
 app.get("/", (req, res) => {
   res.send({ ok: true })
 })
+
+/**
+ *
+ * EVENTS
+ *
+ */
 
 app.get("/events/:band", (req, res) => {
   getAllEvents(req.params.band)
@@ -50,6 +56,24 @@ app.delete("/events/:id", async (req, res, next) => {
   try {
     const resp = await deleteDoc(req.params.id)
     res.status(200).send(resp)
+  } catch (error) {
+    return next(createError(400, error.message))
+  }
+})
+
+/**
+ *
+ *
+ * FANS
+ *
+ *
+ */
+
+app.post("/fans", async (req, res, next) => {
+  try {
+    //
+    console.log("req.body", req.body)
+    res.status(200).send(req.body)
   } catch (error) {
     return next(createError(400, error.message))
   }
